@@ -11,11 +11,12 @@ import {
 import { MaterialIcons } from "@expo/vector-icons"; 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const index = ({router}) => {
+const postaragencia = ({router}) => {
   const [userToken, setUserToken] = useState('')
-  const [description, setDescription] = useState("");
+  const [slogam, setSlogam] = useState("");
   const [file, setFile] = useState(null);
-  const [title, setTitle] = useState("");
+  const [nome, setName] = useState("");
+  const [aboutUs, setUboutUs] = useState("");
   // const router = useRouter()
   const [selectedFile, setSelectedFile] = useState(null);
   const pickFile = async () => {
@@ -34,7 +35,7 @@ const index = ({router}) => {
   };
 
   const uploadFile = async () => {
-    if (!title || !description || !selectedFile) {
+    if (!nome || !slogam || !aboutUs || !selectedFile) {
       console.log('Nenhum arquivo selecionado.');
       return;
     }
@@ -43,11 +44,12 @@ const index = ({router}) => {
 
     const formData = new FormData();
     formData.append('file', selectedFile);
-    formData.append('title', title);
-    formData.append('content', description);
+    formData.append('nome', nome);
+    formData.append('slogam', slogam);
+    formData.append('aboutUs', aboutUs);
 
     try {
-      const response = await fetch('http://localhost:3333/post', {
+      const response = await fetch('http://localhost:3333/agencia/create', {
         method: 'POST',
         body: formData,
         headers: {
@@ -64,19 +66,24 @@ const index = ({router}) => {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        value={title}
-        onChangeText={(text) => setTitle(text)}
-        placeholder="Title"
+        <TextInput
+        value={nome}
+        onChangeText={(text) => setName(text)}
+        placeholder="Nome da Agencia"
         style={styles.input}
-      />
-      <TextInput
-        value={description}
-        onChangeText={(text) => setDescription(text)}
-        placeholder="Description"
-        style={[styles.input, { height: 100 }]}
-        multiline
-      />
+        />
+        <TextInput
+        value={slogam}
+        onChangeText={(text) => setSlogam(text)}
+        placeholder="O Slogam da Agencia"
+        style={styles.input}
+        />
+        <TextInput
+        value={aboutUs}
+        onChangeText={(text) => setUboutUs(text)}
+        placeholder="Escreva algo sobre da Agencia"
+        style={styles.input}
+        />
       <TouchableOpacity onPress={pickFile} style={styles.button}>
         <MaterialIcons name="perm-media" size={24} color="black" />
         <Text>Upload Image</Text>
@@ -87,7 +94,7 @@ const index = ({router}) => {
         <Text>No image selected</Text>
       )}
       <Pressable onPress={uploadFile} style={[styles.button, { marginTop: 20 }]}>
-        <Text style={{ color: "white" }}>Create Post</Text>
+        <Text style={{ color: "white" }}>Criar uma Agencia</Text>
       </Pressable>
     </View>
   );
@@ -122,4 +129,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default index;
+export default postaragencia;

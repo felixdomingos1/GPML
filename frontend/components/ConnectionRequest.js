@@ -12,7 +12,7 @@ const ConnectionRequest = ({
   const acceptConnection = async (requestId) => {
     try {
       const response = await fetch(
-        "http://localhost:3000/connection-request/accept",
+        "http://localhost:3333/notification/accept",
         {
           method: "POST",
           headers: {

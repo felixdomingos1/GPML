@@ -40,9 +40,9 @@ const index = () => {
   const fetchUserProfile = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3333/profile/${userId}`
+        `http://localhost:3000/profile/${userId}`
       );
-      const userData = response.data;
+      const userData = response.data.user;
       setUser(userData);
     } catch (error) {
       console.log("error fetching user profile", error);
@@ -55,9 +55,8 @@ const index = () => {
   }, [userId]);
   const fetchUsers = async () => {
     axios
-      .get(`http://localhost:3333/usuario/get/${userId}`)
+      .get(`http://localhost:3000/users/${userId}`)
       .then((response) => {
-        console.log(response);
         setUsers(response.data);
       })
       .catch((error) => {
@@ -72,14 +71,14 @@ const index = () => {
   const fetchFriendRequests = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3333/notification/get/${userId}`
-      ); 
+        `http://localhost:3000/connection-request/${userId}`
+      );
       if (response.status === 200) {
-        const connectionRequestsData = response.data?.map((res) => ({
-            id: res.id,
-            descricao: res.descricao,
-            agenciaId: res.agenciaId,
-            senderId: res.senderId,
+        const connectionRequestsData = response.data?.map((friendRequest) => ({
+          _id: friendRequest._id,
+          name: friendRequest.name,
+          email: friendRequest.email,
+          image: friendRequest.profileImage,
         }));
 
         setConnectionRequests(connectionRequestsData);
@@ -91,8 +90,27 @@ const index = () => {
   console.log(connectionRequests);
   return (
     <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
+      <View>
+        <Pressable
+        onPress={() => router.push("/agencia/agencia")}
+          style={{
+            marginTop: 10,
+            marginHorizontal: 10,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={{ fontSize: 16, fontWeight: "600" }}>
+            Criar Uma agencia
+          </Text>
+          <AntDesign name="arrowright" size={22} color="black" />
+        </Pressable>
+      </View>
+      <View>
+        
       <Pressable
-      onPress={() => router.push("/network/connections")}
+      onPress={() => router.push("/agencia/todasagencias")}
         style={{
           marginTop: 10,
           marginHorizontal: 10,
@@ -102,11 +120,11 @@ const index = () => {
         }}
       >
         <Text style={{ fontSize: 16, fontWeight: "600" }}>
-          Minhas Notificações
+          Monitoramento de agencias
         </Text>
         <AntDesign name="arrowright" size={22} color="black" />
       </Pressable>
-
+      </View>
       <View
         style={{ borderColor: "#E0E0E0", borderWidth: 2, marginVertical: 10 }}
       />
@@ -120,7 +138,7 @@ const index = () => {
           justifyContent: "space-between",
         }}
       >
-        <Text style={{ fontSize: 16, fontWeight: "600" }}>Invitations (0)</Text>
+        <Text style={{ fontSize: 16, fontWeight: "600" }}>Minhas Agencias (0)</Text>
         <AntDesign name="arrowright" size={22} color="black" />
       </View>
 
@@ -153,7 +171,7 @@ const index = () => {
         </View>
 
         <Text>
-          Find and contact the right people. Plus see who's viewed your profile
+          Entre as minhas agencias aqui. Plus see who's viewed your profile
         </Text>
         <View
           style={{
@@ -172,6 +190,7 @@ const index = () => {
           </Text>
         </View>
       </View>
+      
       <FlatList
         data={users}
         columnWrapperStyle={{ justifyContent: "space-between" }}

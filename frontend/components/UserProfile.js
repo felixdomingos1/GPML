@@ -12,7 +12,7 @@ const UserProfile = ({ item, userId }) => {
   const [connectionSent, setConnectionSent] = useState(false);
   const sendConnectionRequest = async (currentUserId, selectedUserId) => {
     try {
-      const response = await fetch("http://localhost:3000/connection-request", {
+      const response = await fetch("http://localhost:3333/notification", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

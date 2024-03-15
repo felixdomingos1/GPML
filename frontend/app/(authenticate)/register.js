@@ -3,248 +3,166 @@ import {
   Text,
   View,
   SafeAreaView,
-  Image,
   Pressable,
   KeyboardAvoidingView,
   TextInput,
-  Alert
+  Alert,
+  Picker
 } from "react-native";
 import React, { useState } from "react";
-import { AntDesign } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
-import { Entypo } from '@expo/vector-icons';
-import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
 import axios from "axios"
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
 
-const register = () => {
+const RegisterScreen = () => {
+  const router = useRouter();
+
+  const [firstName, setFirstName] = useState("");
+  const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [image, setImage] = useState("");
-  const router = useRouter();
-  const handleRegister = () => {
-      console.log("hello")
-      const user = {
-          name:name,
-          email:email,
-          password:password,
-          profileImage:image
-      }
+  const [status, setStatus] = useState("");
+  const [genero, setGenero] = useState("");
 
-      axios.post("http://localhost:3333/create",user).then((response) => {
-          console.log(response);
-          Alert.alert("Registration successful","You have been registered successfully");
-          setName("");
-          setEmail("");
-          setPassword("");
-          setImage("");
-      }).catch((error) => {
-          Alert.alert("Registration failed","An error occurred while registering");
-          console.log("registration failed",error)
+  const handleRegister = () => {
+    const user = {
+      firstName: firstName,
+      surname: surname,
+      email: email,
+      password: password,
+      status: status,
+      genero: genero
+    };
+
+    axios.post("http://192.168.43.222:3333/usuario/create", user)
+      .then((response) => {
+        console.log(response);
+        Alert.alert("Registration successful", "You have been registered successfully");
+        setFirstName("");
+        setSurname("");
+        setEmail("");
+        setPassword("");
+        setStatus("");
+        setGenero("");
+        const token = response.data.payload;
+        AsyncStorage.setItem("authToken", token);
+        router.replace("/(tabs)/home")
+      })
+      .catch((error) => {
+        Alert.alert("Registration failed", "An error occurred while registering");
+        console.log("Registration failed", error)
       });
   }
-  return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}
-    >
-      <View>
-        <Image
-          style={{ width: 150, height: 100, resizeMode: "contain" }}
-          source={{
-            uri: "https://www.freepnglogos.com/uploads/linkedin-logo-transparent-png-25.png",
-          }}
-        />
-      </View>
 
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}>
       <KeyboardAvoidingView>
-        <View style={{ alignItems: "center" }}>
+
+      <View style={{ alignItems: "center" }}>
           <Text
             style={{
-              fontSize: 17,
+              fontSize: 28,
               fontWeight: "bold",
-              marginTop: 12,
+              marginTop: 20,
               color: "#041E42",
             }}
           >
-            Register to your Account
+            Explore a Stivy Modal
           </Text>
         </View>
+        <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 40, color: "#041E42" }}>
+          Register to your Account
+        </Text>
 
-        <View style={{ marginTop: 50 }}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 5,
-              backgroundColor: "#E0E0E0",
-              paddingVertical: 5,
-              borderRadius: 5,
-              marginTop: 30,
-            }}
-          >
-            <Ionicons
-              name="person"
-              size={24}
-              color="gray"
-              style={{ marginLeft: 8 }}
-            />
-            <TextInput
-              value={name}
-              onChangeText={(text) => setName(text)}
-              style={{
-                color: "gray",
-                marginVertical: 10,
-                width: 300,
-                fontSize: name ? 18 : 18,
-              }}
-              placeholder="enter your name"
-            />
-          </View>
+        <TextInput
+          value={firstName}
+          onChangeText={(text) => setFirstName(text)}
+          style={styles.input}
+          placeholder="Enter your first name"
+        />
 
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 5,
-              backgroundColor: "#E0E0E0",
-              paddingVertical: 5,
-              borderRadius: 5,
-              marginTop: 30,
-            }}
-          >
-            <MaterialIcons
-              style={{ marginLeft: 8 }}
-              name="email"
-              size={24}
-              color="gray"
-            />
-            <TextInput
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-              style={{
-                color: "gray",
-                marginVertical: 10,
-                width: 300,
-                fontSize: email ? 18 : 18,
-              }}
-              placeholder="enter your Email"
-            />
-          </View>
+        <TextInput
+          value={surname}
+          onChangeText={(text) => setSurname(text)}
+          style={styles.input}
+          placeholder="Enter your surname"
+        />
 
+        <TextInput
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+          style={styles.input}
+          placeholder="Enter your email"
+        />
 
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 5,
-                backgroundColor: "#E0E0E0",
-                paddingVertical: 5,
-                borderRadius: 5,
-                marginTop: 30,
-              }}
-            >
-              <AntDesign
-                style={{ marginLeft: 8 }}
-                name="lock1"
-                size={24}
-                color="gray"
-              />
-              <TextInput
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-                secureTextEntry={true}
-                style={{
-                  color: "gray",
-                  marginVertical: 10,
-                  width: 300,
-                  fontSize: password ? 18 : 18,
-                }}
-                placeholder="enter your Password"
-              />
-            </View>
+        <TextInput
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+          secureTextEntry={true}
+          style={styles.input}
+          placeholder="Enter your password"
+        />
 
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 5,
-              backgroundColor: "#E0E0E0",
-              paddingVertical: 5,
-              borderRadius: 5,
-              marginTop: 30,
-            }}
-          >
-            <Entypo name="image" size={24} color="gray" style={{marginLeft:8}} />
-            <TextInput
-              value={image}
-              onChangeText={(text) => setImage(text)}
-              style={{
-                color: "gray",
-                marginVertical: 10,
-                width: 300,
-                fontSize: image ? 18 : 18,
-              }}
-              placeholder="enter your image url"
-            />
-          </View>
+        <Picker
+          selectedValue={status}
+          onValueChange={(itemValue) => setStatus(itemValue)}
+          style={styles.input}
+        >
+          <Picker.Item label="Select status" value="" />
+          <Picker.Item label="Fotografo" value="fotografo" />
+          <Picker.Item label="Modelo" value="modelo" />
+          {/* Adicione outros status conforme necessário */}
+        </Picker>
 
-        
+        <Picker
+          selectedValue={genero}
+          onValueChange={(itemValue) => setGenero(itemValue)}
+          style={styles.input}
+        >
+          <Picker.Item label="Select gender" value="" />
+          <Picker.Item label="Masculino" value="masculino" />
+          <Picker.Item label="Feminino" value="feminino" />
+        </Picker>
 
-          <View
-            style={{
-              marginTop: 12,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text>Keep me logged in</Text>
-
-            <Text style={{ color: "#007FFF", fontWeight: "500" }}>
-              Forgot Password
-            </Text>
-          </View>
-
-          <View style={{ marginTop: 80 }} />
-
-          <Pressable
-         onPress={handleRegister}
-            style={{
-              width: 200,
-              backgroundColor: "#0072b1",
-              borderRadius: 6,
-              marginLeft: "auto",
-              marginRight: "auto",
-              padding: 15,
-            }}
-          >
-            <Text
-              style={{
-                textAlign: "center",
-                color: "white",
-                fontSize: 16,
-                fontWeight: "bold",
-              }}
-            >
-              Register
-            </Text>
-          </Pressable>
-
+        <Pressable onPress={handleRegister} style={styles.button}>
+          <Text style={styles.buttonText}>Register</Text>
+        </Pressable>
+      </KeyboardAvoidingView>
           <Pressable
             onPress={() => router.replace("/login")}
             style={{ marginTop: 15 }}
           >
             <Text style={{ textAlign: "center", color: "gray", fontSize: 16 }}>
-              Already have an account? Sign up
+              I have already account Login
             </Text>
           </Pressable>
-        </View>
-      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
 
-export default register;
+const styles = StyleSheet.create({
+  input: {
+    backgroundColor: "#E0E0E0",
+    paddingVertical: 10,
+    borderRadius: 5,
+    marginTop: 10,
+    width: 300,
+    padding: 15,
+  },
+  button: {
+    width: 200,
+    backgroundColor: "#0072b1",
+    borderRadius: 6,
+    marginTop: 30,
+    padding: 15,
+    alignItems: "center",
+  },
+  buttonText: {
+    textAlign: "center",
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+});
 
-const styles = StyleSheet.create({});
+export default RegisterScreen;

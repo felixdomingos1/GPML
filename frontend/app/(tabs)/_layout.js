@@ -23,7 +23,7 @@ export default function Layout() {
       <Tabs.Screen
         name="network"
         options={{
-          tabBarLabel: "network",
+          tabBarLabel: "Network",
           tabBarLabelStyle: { color: "#008E97" },
           headerShown: false,
           tabBarIcon: ({ focused }) =>
@@ -38,6 +38,20 @@ export default function Layout() {
         name="post"
         options={{
           tabBarLabel: "Post",
+          tabBarLabelStyle: { color: "#008E97" },
+          headerShown: false,
+          tabBarIcon: ({ focused }) =>
+            focused ? (
+              <AntDesign name="plussquare" size={24} color="black" />
+            ) : (
+              <AntDesign name="plussquareo" size={24} color="black" />
+            ),
+        }}
+      />
+      <Tabs.Screen
+        name="agencia"
+        options={{
+          tabBarLabel: "Agencias",
           tabBarLabelStyle: { color: "#008E97" },
           headerShown: false,
           tabBarIcon: ({ focused }) =>

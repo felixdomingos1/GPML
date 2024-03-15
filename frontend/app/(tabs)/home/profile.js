@@ -43,7 +43,7 @@ const profile = () => {
   const fetchUserProfile = async () => {
     try {
       const response = await axios.get(
-        `http://192.168.43.222:3333/usuario/get/${userId}`
+        `http://localhost:3333/usuario/get/${userId}`
       );
       const userData = response.data;
       setUser(userData);
@@ -55,7 +55,7 @@ const profile = () => {
   const handleSaveDescription = async () => {
     try {
       const response = await axios.put(
-        `http://192.168.43.222:3333/usuario/get/${userId}`,
+        `http://localhost:3333/usuario/get/${userId}`,
         {
           userDescription,
         }
@@ -88,7 +88,16 @@ const profile = () => {
           gap: 4,
         }}
       >
-        <Pressable>
+        <Pressable
+        style={{
+          padding: 10,
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 4,
+        }}
+        onPress={() => router.push("/home")}
+        >
+        <AntDesign name="arrowleft" size={22} color="black" />
           <Text>{user?.firstName}</Text>
         </Pressable>
 

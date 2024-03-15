@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwt_decode from "jwt-decode";
@@ -6,7 +6,9 @@ import { AntDesign, Entypo, Feather } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
 import axios from "axios";
 import moment from "moment";
+import { useRouter } from "expo-router";
 const connections = () => {
+  const router = useRouter()
   const [connections, setConnections] = useState([]);
 
   const [userId, setUserId] = useState("");
@@ -30,15 +32,13 @@ const connections = () => {
   const fetchConnections = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3333/connections/${userId}`
+        `http://localhost:3333/usuario/get/${userId}`
       );
-      setConnections(response.data.connections);
+      setConnections(response.data.Notification);
     } catch (error) {
       console.log(error);
     }
   };
-
-  console.log(connections);
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <View
@@ -47,11 +47,18 @@ const connections = () => {
           alignItems: "center",
           justifyContent: "space-between",
           marginHorizontal: 12,
-          marginTop: 10,
+          marginTop: 10
         }}
       >
+      
+      <Pressable
+        onPress={() => router.push("/network")}
+        >
+        <AntDesign name="arrowleft" size={22} color="black" />
+        </Pressable>
+
         <Text style={{ fontWeight: "500" }}>
-          {connections?.length} Connections
+          {connections?.length} Notificações
         </Text>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
           <AntDesign name="search1" size={22} color="black" />
@@ -75,10 +82,9 @@ const connections = () => {
               style={{ width: 48, height: 48, borderRadius: 24 }}
               source={{ uri: item?.profileImage }}
             />
-
             <View style={{ flexDirection: "column", gap: 2,flex:1 }}>
               <Text style={{ fontSize: 15, fontWeight: "500" }}>
-                {item?.name}
+                {item?.descricao}
               </Text>
 
               <Text style={{ color: "gray" }}>

@@ -34,18 +34,24 @@ const login = () => {
 
     checkLoginStatus();
   },[])
-  const handleLogin = () => {
-      const user = {
-          email: email,
-          password: password
-      }
+  const handleLogin = async () => { 
+    console.log('estou clicando');
+    try {
+        const user = {
+            email: email,
+            password: password
+        };
 
-      axios.post("http://192.168.43.222:3333/usuario/auth", user).then((response) => {
-          const token = response.data.token;
-          AsyncStorage.setItem("authToken",token);
-          router.replace("/(tabs)/home")
-      })
-  }
+        const response = await axios.post("http://localhost:3333/usuario/auth", user);         
+        const token = response.data.token;
+        await AsyncStorage.setItem("authToken", token); 
+
+        router.replace("/(tabs)/home"); 
+    } catch (error) {
+        console.error("Login failed:", error);
+    }
+};
+
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}
