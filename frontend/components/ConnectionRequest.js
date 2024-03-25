@@ -9,25 +9,25 @@ const ConnectionRequest = ({
   setConnectionRequests,
   userId,
 }) => {
-  const acceptConnection = async (requestId) => {
+  const acceptConnection = async (agenciadoId) => {
     try {
       const response = await fetch(
-        "http://localhost:3333/notification/accept",
+        "http://localhost:3333/agencia/create-agenciado",
         {
-          method: "POST",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            senderId: requestId,
-            recepientId: userId,
+            agenciadoId: agenciadoId,
+            agenciaId: userId,
           }),
         }
       );
 
       if (response.ok) {
         setConnectionRequests(
-          connectionRequests.filter((request) => request._id !== requestId)
+          connectionRequests.filter((request) => request.id !== agenciadoId)
         );
       }
     } catch (error) {
@@ -61,7 +61,7 @@ const ConnectionRequest = ({
           </View>
 
           <Pressable
-            onPress={() => acceptConnection(item._id)}
+            onPress={() => acceptConnection(item.id)}
             style={{
               width: 36,
               height: 36,

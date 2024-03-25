@@ -56,8 +56,13 @@ const login = () => {
     <SafeAreaView
       style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}
     >
-      <View  style={{ width: 150, height: 100, resizeMode: "contain" }}>
-        <Text>Stivy App</Text>
+      <View  style={{ 
+        width: 300, height: 100,display:'flex', alignItems:'center',justifyContent:'center', resizeMode: "contain" }}>
+        <Text style={{
+          fontSize:30,
+          fontWeight:600,
+          color:'#E0A0E0', 
+        }}>STIVY MODEL</Text>
       </View>
 
       <KeyboardAvoidingView>
@@ -81,7 +86,7 @@ const login = () => {
               alignItems: "center",
               gap: 5,
               backgroundColor: "#E0E0E0",
-              paddingVertical: 5,
+              paddingVertical: 2,
               borderRadius: 5,
               marginTop: 30,
             }}
@@ -97,7 +102,7 @@ const login = () => {
               onChangeText={(text) => setEmail(text)}
               style={{
                 color: "gray",
-                marginVertical: 10,
+                marginVertical: 5,
                 width: 300,
                 fontSize: email ? 18 : 18,
               }}
@@ -129,7 +134,7 @@ const login = () => {
                 secureTextEntry={true}
                 style={{
                   color: "gray",
-                  marginVertical: 10,
+                  marginVertical: 5,
                   width: 300,
                   fontSize: password ? 18 : 18,
                 }}

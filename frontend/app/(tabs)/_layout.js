@@ -1,7 +1,7 @@
 import { Tabs } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons,SimpleLineIcons } from "@expo/vector-icons";
 
 export default function Layout() {
   return (
@@ -56,9 +56,9 @@ export default function Layout() {
           headerShown: false,
           tabBarIcon: ({ focused }) =>
             focused ? (
-              <AntDesign name="plussquare" size={24} color="black" />
+              <SimpleLineIcons name="organization" size={24} color="black" />
             ) : (
-              <AntDesign name="plussquareo" size={24} color="black" />
+              <SimpleLineIcons name="organization" size={24} color="black" />
             ),
         }}
       />

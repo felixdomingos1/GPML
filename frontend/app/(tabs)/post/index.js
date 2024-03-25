@@ -14,10 +14,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const index = ({router}) => {
   const [userToken, setUserToken] = useState('')
   const [description, setDescription] = useState("");
-  const [file, setFile] = useState(null);
   const [title, setTitle] = useState("");
   // const router = useRouter()
   const [selectedFile, setSelectedFile] = useState(null);
+  
   const pickFile = async () => {
     try {
       const fileInput = document.createElement('input');
@@ -35,7 +35,7 @@ const index = ({router}) => {
 
   const uploadFile = async () => {
     if (!title || !description || !selectedFile) {
-      console.log('Nenhum arquivo selecionado.');
+      console.log('Selecione Todos os Arquivos!.');
       return;
     }
     const token = await AsyncStorage.getItem('authToken') 
@@ -81,8 +81,8 @@ const index = ({router}) => {
         <MaterialIcons name="perm-media" size={24} color="black" />
         <Text>Upload Image</Text>
       </TouchableOpacity>
-      {file ? (
-        <Image source={{ uri: file }} style={styles.image} />
+      {selectedFile ? (
+        <Image source={{ uri: selectedFile }} style={styles.image} />
       ) : (
         <Text>No image selected</Text>
       )}

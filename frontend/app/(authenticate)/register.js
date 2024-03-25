@@ -7,8 +7,9 @@ import {
   KeyboardAvoidingView,
   TextInput,
   Alert,
-  Picker
+  // Picker
 } from "react-native";
+import {Picker} from '@react-native-picker/picker';
 import React, { useState } from "react";
 import axios from "axios"
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -34,7 +35,7 @@ const RegisterScreen = () => {
       genero: genero
     };
 
-    axios.post("http://192.168.43.222:3333/usuario/create", user)
+    axios.post("http://localhost:3333/usuario/create", user)
       .then((response) => {
         console.log(response);
         Alert.alert("Registration successful", "You have been registered successfully");
@@ -108,10 +109,11 @@ const RegisterScreen = () => {
           onValueChange={(itemValue) => setStatus(itemValue)}
           style={styles.input}
         >
-          <Picker.Item label="Select status" value="" />
+          <Picker.Item label="Selecione o teu Status" value="" />
           <Picker.Item label="Fotografo" value="fotografo" />
           <Picker.Item label="Modelo" value="modelo" />
-          {/* Adicione outros status conforme necessário */}
+          <Picker.Item label="Modelo Freelancer" value="modeloFreeLancer" />
+          <Picker.Item label="Fotografo Freelancer" value="fotografoFreeLancer" />
         </Picker>
 
         <Picker
@@ -119,7 +121,7 @@ const RegisterScreen = () => {
           onValueChange={(itemValue) => setGenero(itemValue)}
           style={styles.input}
         >
-          <Picker.Item label="Select gender" value="" />
+          <Picker.Item label="Selecione o Genero" value="" />
           <Picker.Item label="Masculino" value="masculino" />
           <Picker.Item label="Feminino" value="feminino" />
         </Picker>

@@ -11,15 +11,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
 import { AntDesign } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
-import UserProfile from "../../../components/UserProfile";
+import { Entypo } from "@expo/vector-icons"; 
 import ConnectionRequest from "../../../components/ConnectionRequest";
 import { useRouter } from "expo-router";
+import AgenciaProfile from "./todasagencias";
 
 const index = () => {
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState();
-  const [users, setUsers] = useState([]);
+  const [agencia, setagencia] = useState([]);
+  const [userAgencia, setUserAgencia] = useState([])
   const router = useRouter()
   const [connectionRequests, setConnectionRequests] = useState([]);
   useEffect(() => {
@@ -40,24 +41,27 @@ const index = () => {
   const fetchUserProfile = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/profile/${userId}`
+        `http://localhost:3333/usuario/get/${userId}`
       );
-      const userData = response.data.user;
+      const userData =  response.data;
+      const { agencia,Administrator } =  response.data;
       setUser(userData);
+      setUserAgencia(Administrator)
     } catch (error) {
       console.log("error fetching user profile", error);
     }
   };
+  console.log('esta e a agencia', userAgencia);
   useEffect(() => {
     if (userId) {
-      fetchUsers();
+      fetchagencia();
     }
   }, [userId]);
-  const fetchUsers = async () => {
+  const fetchagencia = async () => {
     axios
-      .get(`http://localhost:3000/users/${userId}`)
+      .get(`http://localhost:3333/agencia/get/null`)
       .then((response) => {
-        setUsers(response.data);
+        setagencia(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -75,7 +79,7 @@ const index = () => {
       );
       if (response.status === 200) {
         const connectionRequestsData = response.data?.map((friendRequest) => ({
-          _id: friendRequest._id,
+          id: friendRequest.id,
           name: friendRequest.name,
           email: friendRequest.email,
           image: friendRequest.profileImage,
@@ -107,24 +111,6 @@ const index = () => {
           <AntDesign name="arrowright" size={22} color="black" />
         </Pressable>
       </View>
-      <View>
-        
-      <Pressable
-      onPress={() => router.push("/agencia/todasagencias")}
-        style={{
-          marginTop: 10,
-          marginHorizontal: 10,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text style={{ fontSize: 16, fontWeight: "600" }}>
-          Monitoramento de agencias
-        </Text>
-        <AntDesign name="arrowright" size={22} color="black" />
-      </Pressable>
-      </View>
       <View
         style={{ borderColor: "#E0E0E0", borderWidth: 2, marginVertical: 10 }}
       />
@@ -138,7 +124,9 @@ const index = () => {
           justifyContent: "space-between",
         }}
       >
-        <Text style={{ fontSize: 16, fontWeight: "600" }}>Minhas Agencias (0)</Text>
+        <Text style={{ fontSize: 16, fontWeight: "600" }}
+          onPress={()=> router.push("/agencia/minhaagencia")}
+        >Minhas Agencias ({userAgencia === null ? 0 : userAgencia.length })</Text>
         <AntDesign name="arrowright" size={22} color="black" />
       </View>
 
@@ -190,14 +178,13 @@ const index = () => {
           </Text>
         </View>
       </View>
-      
       <FlatList
-        data={users}
+        data={agencia}
         columnWrapperStyle={{ justifyContent: "space-between" }}
         numColumns={2}
-        keyExtractor={(item) => item._id}
+        keyExtractor={(item) => item.id}
         renderItem={({ item, key }) => (
-          <UserProfile userId={userId} item={item} key={index} />
+          <AgenciaProfile userId={agencia} item={item} key={index} />
         )}
       />
     </ScrollView>

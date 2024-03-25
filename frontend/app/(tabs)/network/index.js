@@ -20,6 +20,7 @@ const index = () => {
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState();
   const [users, setUsers] = useState([]);
+  const [notification, setNotification] = useState([]);
   const router = useRouter()
   const [connectionRequests, setConnectionRequests] = useState([]);
   useEffect(() => {
@@ -29,47 +30,38 @@ const index = () => {
       const userId = decodedToken.id;
       setUserId(userId);
     };
-
     fetchUser();
   }, []);
   useEffect(() => {
     if (userId) {
       fetchUserProfile();
+      fetchUsers();
+      fetchAdminNotifications();
     }
   }, [userId]);
   const fetchUserProfile = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3333/profile/${userId}`
+        `http://localhost:3333/usuario/get/${userId}`
       );
       const userData = response.data;
-      setUser(userData);
+      setUser(userData); 
     } catch (error) {
       console.log("error fetching user profile", error);
     }
   };
-  useEffect(() => {
-    if (userId) {
-      fetchUsers();
-    }
-  }, [userId]);
   const fetchUsers = async () => {
     axios
-      .get(`http://localhost:3333/usuario/get/${userId}`)
+      .get(`http://localhost:3333/usuario/get/null`)
       .then((response) => {
-        console.log(response);
         setUsers(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
   };
-  useEffect(() => {
-    if (userId) {
-      fetchFriendRequests();
-    }
-  }, [userId]);
-  const fetchFriendRequests = async () => {
+
+  const fetchAdminNotifications = async () => {
     try {
       const response = await axios.get(
         `http://localhost:3333/notification/get/${userId}`
@@ -82,13 +74,13 @@ const index = () => {
             senderId: res.senderId,
         }));
 
+        setNotification(response.data)
         setConnectionRequests(connectionRequestsData);
       }
     } catch (error) {
       console.log("error", error);
     }
   };
-  console.log(connectionRequests);
   return (
     <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
       <Pressable
@@ -127,17 +119,22 @@ const index = () => {
       <View
         style={{ borderColor: "#E0E0E0", borderWidth: 2, marginVertical: 10 }}
       />
-
       <View>
-        {connectionRequests?.map((item, index) => (
-          <ConnectionRequest
-            item={item}
-            key={index}
-            connectionRequests={connectionRequests}
-            setConnectionRequests={setConnectionRequests}
-            userId={userId}
-          />
-        ))}
+  {connectionRequests && (
+      <View>
+        {connectionRequests
+          .filter(item => item.id !== userId)
+          .map((item, index) => (
+            <ConnectionRequest
+              item={item}
+              key={index}
+              connectionRequests={connectionRequests}
+              setConnectionRequests={setConnectionRequests}
+              userId={userId}
+            />
+          ))}
+      </View>
+    )}
       </View>
 
       <View style={{ marginHorizontal: 15 }}>
@@ -151,9 +148,8 @@ const index = () => {
           <Text>Grow your network faster</Text>
           <Entypo name="cross" size={24} color="black" />
         </View>
-
         <Text>
-          Find and contact the right people. Plus see who's viewed your profile
+          Find and contact the right people. Plus see who's viewed your profile!
         </Text>
         <View
           style={{
@@ -176,7 +172,7 @@ const index = () => {
         data={users}
         columnWrapperStyle={{ justifyContent: "space-between" }}
         numColumns={2}
-        keyExtractor={(item) => item._id}
+        keyExtractor={(item) => item.id}
         renderItem={({ item, key }) => (
           <UserProfile userId={userId} item={item} key={index} />
         )}

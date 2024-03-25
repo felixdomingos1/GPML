@@ -156,10 +156,10 @@ const profile = () => {
         </View>
 
         <Text style={{ marginTop: 12, fontWeight: "500", fontSize: 15 }}>
-          Youtube • Linkedin Member
+          {user?.status} | {user?.genero}
         </Text>
         <Text style={{ fontSize: 15, color: "gray" }}>
-          Bengaluru, Karnataka, India
+          Angola, Luanda, Viana
         </Text>
       </View>
 

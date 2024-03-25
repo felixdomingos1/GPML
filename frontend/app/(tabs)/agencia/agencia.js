@@ -7,18 +7,17 @@ import {
   Pressable,
   StyleSheet,
   TouchableOpacity,
+  Alert,  
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons"; 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const postaragencia = ({router}) => {
-  const [userToken, setUserToken] = useState('')
-  const [slogam, setSlogam] = useState("");
-  const [file, setFile] = useState(null);
+const postaragencia = ( ) => { 
+  const [slogam, setSlogam] = useState(""); 
   const [nome, setName] = useState("");
-  const [aboutUs, setUboutUs] = useState("");
-  // const router = useRouter()
+  const [aboutUs, setUboutUs] = useState(""); 
   const [selectedFile, setSelectedFile] = useState(null);
+
   const pickFile = async () => {
     try {
       const fileInput = document.createElement('input');
@@ -35,8 +34,14 @@ const postaragencia = ({router}) => {
   };
 
   const uploadFile = async () => {
+    console.log({
+      nome:nome,
+      slogam:slogam,
+      aboutUs:aboutUs,
+      selectedFile:selectedFile
+    });
     if (!nome || !slogam || !aboutUs || !selectedFile) {
-      console.log('Nenhum arquivo selecionado.');
+      Alert.alert('Nenhum arquivo selecionado.');
       return;
     }
     const token = await AsyncStorage.getItem('authToken') 
@@ -88,8 +93,8 @@ const postaragencia = ({router}) => {
         <MaterialIcons name="perm-media" size={24} color="black" />
         <Text>Upload Image</Text>
       </TouchableOpacity>
-      {file ? (
-        <Image source={{ uri: file }} style={styles.image} />
+      {selectedFile ? (
+        <Image source={{ uri: selectedFile }} style={styles.image} />
       ) : (
         <Text>No image selected</Text>
       )}
